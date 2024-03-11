@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>History Sensor</title>
+    <link rel="stylesheet" href="./navbar.css" />
+    <link rel="stylesheet" href="./historySensor.css" />
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/">IOT DASHBOARD</a></li>
+        <li><a href="./historyDevices.html">HISTORY DEVICES</a></li>
+        <li><a href="./historySensor.html">HISTORY SENSORS</a></li>
+        <li><a href="./profile.html">PROFILE</a></li>
+      </ul>
+    </nav>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search..." />
+      <button id="searchButton">Search</button>
+
+      <select id="searchCategory">
+        <option value="all">All</option>
+        <option value="temperature">Temperature</option>
+        <option value="humidity">Humidity</option>
+        <option value="light">Light</option>
+        <option value="date">Date</option>
+      </select>
+    </div>
+
+    <div class="sort-bar">
+      <label for="sortCategory">Sort by:</label>
+      <select id="sortCategory">
+        <option value="id">ID</option>
+        <option value="temperature">Temperature</option>
+        <option value="humidity">Humidity</option>
+        <option value="light">Light</option>
+        <option value="date">Date</option>
+      </select>
+    </div>
+
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Temperature</th>
+          <th>Humidity</th>
+          <th>Light</th>
+          <th>Date</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="pagination">
+      <a href="#" class="active">1</a>
+      <a href="#">2</a>
+      <a href="#">3</a>
+    </div>
+
+    <script src="./historySensor.js"></script>
+    <script src="./navbar.js"></script>
+  </body>
+</html>

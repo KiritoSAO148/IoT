@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>History Devices</title>
+    <link rel="stylesheet" href="./navbar.css" />
+    <link rel="stylesheet" href="./historyDevices.css" />
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/">IOT DASHBOARD</a></li>
+        <li><a href="./historyDevices.html">HISTORY DEVICES</a></li>
+        <li><a href="./historySensor.html">HISTORY SENSORS</a></li>
+        <li><a href="./profile.html">PROFILE</a></li>
+      </ul>
+    </nav>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search..." />
+      <button id="searchButton">Search</button>
+
+      <select id="searchCategory">
+        <option value="all">All</option>
+        <option value="device">Device</option>
+        <option value="action">Action</option>
+        <option value="date">Date</option>
+        <option value="time">Time</option>
+      </select>
+    </div>
+
+    <div class="sort-bar">
+      <label for="sortCategory">Sort by:</label>
+      <select id="sortCategory">
+        <option value="id">ID</option>
+        <option value="device">Device</option>
+        <option value="action">Action</option>
+        <option value="date">Date</option>
+        <option value="time">Time</option>
+      </select>
+    </div>
+
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Device</th>
+          <th>Action</th>
+          <th>Date</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody id="actionHistoryTableBody"></tbody>
+    </table>
+
+    <div class="pagination">
+      <a href="#" class="active">1</a>
+      <a href="#">2</a>
+      <a href="#">3</a>
+    </div>
+
+    <script src="./historyDevices.js"></script>
+
+    <script src="./navbar.js"></script>
+  </body>
+</html>
