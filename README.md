@@ -37,3 +37,7 @@ const client = mqtt.connect("mqtt://<your mqtt host>:<your mqtt port number>/", 
   password: "<your mqtt password>",
 });
 ```
+
+## API Documentations
+
+<a href="[https://readme.com/](https://documenter.getpostman.com/view/24287979/2sA35BbjDb)https://documenter.getpostman.com/view/24287979/2sA35BbjDb" target="_blank">API Docs</a>
