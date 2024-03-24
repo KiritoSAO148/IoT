@@ -40,4 +40,4 @@ const client = mqtt.connect("mqtt://<your mqtt host>:<your mqtt port number>/", 
 
 ## API Documentations
 
-<a href="doc:https://documenter.getpostman.com/view/24287979/2sA35BbjDb" target="_blank">Introduction</a>
+<a href="https://documenter.getpostman.com/view/24287979/2sA35BbjDb" target="_blank">Introduction</a>
