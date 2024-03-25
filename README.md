@@ -40,7 +40,8 @@ const client = mqtt.connect("mqtt://<your mqtt host>:<your mqtt port number>/", 
 
 ## Run Front-end side
 
-Open folder in Visual Studio Code and open index.html file. Right click and open with Live Server.
+Open folder in Visual Studio Code and open index.html file. Right click and open with Live Server. After running that, you will get this interface:
+![image](https://github.com/KiritoSAO148/IoT/assets/118887671/143b8a5b-58eb-4d1b-81f8-799799d695e1)
 
 ## Install Arduino
 
