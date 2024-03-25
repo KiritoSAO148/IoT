@@ -38,6 +38,18 @@ const client = mqtt.connect("mqtt://<your mqtt host>:<your mqtt port number>/", 
 });
 ```
 
+## Run Front-end side
+
+Open folder in Visual Studio Code and open index.html file. Right click and open with Live Server.
+
+## Install Arduino
+
+[Download Arduino here!](https://www.arduino.cc/en/software/).
+[Installation guide](https://www.thegioididong.com/game-app/cach-tai-va-cai-dat-arduino-ide-nhanh-de-dang-1321845)
+[Turn LED with ESP32](https://www.instructables.com/Blinking-an-LED-With-ESP32/)
+[DHT 11 sensor with ESP32](https://randomnerdtutorials.com/esp32-dht11-dht22-temperature-humidity-sensor-arduino-ide/)
+[Photoregister with ESP32](https://www.youtube.com/watch?v=0t-e2Dmz5TI)
+
 ## API Documentations
 
 [API Docs](https://documenter.getpostman.com/view/24287979/2sA35BbjDb)
