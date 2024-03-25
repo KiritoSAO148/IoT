@@ -50,6 +50,20 @@ Open folder in Visual Studio Code and open index.html file. Right click and open
 [DHT 11 sensor with ESP32](https://randomnerdtutorials.com/esp32-dht11-dht22-temperature-humidity-sensor-arduino-ide/)
 [Photoregister with ESP32](https://www.youtube.com/watch?v=0t-e2Dmz5TI)
 
+```cpp
+const char *ssid = "<YOUR_WIFI_SSID>";
+const char *password = "<YOUR WIFI PASSWORD>";
+const char *mqtt_broker = "<YOUR HOST>";
+const char *topic = "devices/control";
+const char *topicStatus = "devices/status";
+const char *topicSensor = "huy/sensor";
+const char *mqtt_username = "<YOUR MQTT USERNAME>";
+const char *mqtt_password = "<YOUR MQTT PASSWORD>";
+const int mqtt_port = <YOUR MQTT PORT NUMBER>;
+```
+
+Open file "sketch_feb15a.ino" and change your network id, network password, mqtt host broker, mqtt username, mqtt password and mqtt port number.
+
 ## API Documentations
 
 [API Docs](https://documenter.getpostman.com/view/24287979/2sA35BbjDb)
