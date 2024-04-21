@@ -23,14 +23,13 @@
 
       <select id="searchCategory">
         <option value="all">All</option>
-        <option value="device">Device</option>
-        <option value="action">Action</option>
-        <option value="date">Date</option>
-        <option value="time">Time</option>
+        <option value="device_name">Device</option>
+        <option value="status">Action</option>
+        <option value="created_at">Time</option>
       </select>
     </div>
 
-    <div class="sort-bar">
+    <!-- <div class="sort-bar">
       <label for="sortCategory">Sort by:</label>
       <select id="sortCategory">
         <option value="id">ID</option>
@@ -39,16 +38,15 @@
         <option value="date">Date</option>
         <option value="time">Time</option>
       </select>
-    </div>
+    </div> -->
 
     <table id="dataTable">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Device</th>
-          <th>Action</th>
-          <th>Date</th>
-          <th>Time</th>
+          <th class="sortable" data-field="id">ID</th>
+          <th class="sortable" data-field="device_name">Device</th>
+          <th class="sortable" data-field="status">Action</th>
+          <th class="sortable" data-field="created_at">Time</th>
         </tr>
       </thead>
       <tbody id="actionHistoryTableBody"></tbody>

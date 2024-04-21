@@ -26,11 +26,11 @@
         <option value="temperature">Temperature</option>
         <option value="humidity">Humidity</option>
         <option value="light">Light</option>
-        <option value="date">Date</option>
+        <option value="created_at">Time</option>
       </select>
     </div>
 
-    <div class="sort-bar">
+    <!-- <div class="sort-bar">
       <label for="sortCategory">Sort by:</label>
       <select id="sortCategory">
         <option value="id">ID</option>
@@ -39,17 +39,16 @@
         <option value="light">Light</option>
         <option value="date">Date</option>
       </select>
-    </div>
+    </div> -->
 
     <table id="dataTable">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Temperature</th>
-          <th>Humidity</th>
-          <th>Light</th>
-          <th>Date</th>
-          <th>Time</th>
+          <th class="sortable" data-field="id">ID</th>
+          <th class="sortable" data-field="temperature">Temperature</th>
+          <th class="sortable" data-field="humidity">Humidity</th>
+          <th class="sortable" data-field="light">Light</th>
+          <th class="sortable" data-field="created_at">Time</th>
         </tr>
       </thead>
       <tbody></tbody>

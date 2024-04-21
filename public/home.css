@@ -1,0 +1,127 @@
+body {
+    margin-left:  5px;
+    margin-right: 5px;
+}
+
+.boxbanner {
+    background-color: rgb(22, 22, 70);
+    height: 100px;
+    padding-top:10px;
+}
+
+.box_frame_S {
+    background-color: rgb(33, 33, 99);
+    height: 350px;
+    padding: 7;
+    padding-top: 20;
+}
+
+.box_frame_M {
+    height: 400px;
+    background-color: rgb(22, 22, 70);
+    padding: 10px;
+}
+
+.textbanner {
+    color: rgb(191, 82, 27);
+    margin-top: 10px;
+}
+
+.boxlabel {
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    background-color: rgb(33, 45, 122);
+    height: 110px;
+}
+
+.boxdata {
+
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: rgb(171, 97, 60);
+    height: 200px;
+    padding: 30;
+}   
+
+.box_frame_XS{
+    height: 200px; 
+    background-color: rgb(171, 97, 60) ;  
+    border-radius: 5px;
+}
+
+.labeltext {
+    color: red;
+}
+
+.btn1 {
+    margin-top: 45px;
+    height: 40px;
+    width: 120px;
+    background-color: rgb(44, 173, 39);
+    border: 0;
+    border-radius: 5px;
+}
+
+.btn2 {
+    margin-top: 30px;
+    height: 40px;
+    width: 120px;
+    background-color: rgb(221, 62, 51);
+    border: 0;
+    border-radius: 5px;
+}
+
+.btn1:active {
+    background-color: rgb(19, 125, 18);
+}
+
+.btn2:active {
+    background-color: rgb(161, 55, 34);
+}
+
+/*************************************************WARNING MODE********************************************/
+.warning-mode-on {    
+    animation: animate 
+        1s linear infinite;
+}
+
+@keyframes animate {
+    0% {
+        
+        opacity: 1;
+        background-color: #af1d1d;
+    }
+
+    50% {
+        opacity: 1;
+        background-color: #d6111100;
+    }
+
+    100% {
+        opacity: 1;
+        background-color: #af1d1d;
+    }
+}
+
+
+/* ***********************************HISTORY BUTTON**************************************** */
+.form {    
+    /* float: right; */
+    /* margin-left: 13px;
+    padding-left: 7px;*/
+    
+    padding: 12px; 
+    text-decoration:none;
+    font-size: 30px;
+    color: #0a0606;
+    background-color: rgb(191, 82, 27);
+    border-radius: 10px;
+}
+
+.form:hover {
+    cursor: pointer;
+    background-color: rgb(0, 0, 99);
+    color: white;
+    transition: 0.7s;
+}
+

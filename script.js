@@ -30,12 +30,13 @@ init();
 function turnOnLight() {
   if (ledState === 0) {
     if (confirm("Turn the light on?")) {
-      fetch("http://localhost:3000/api/v1/led", {
+      fetch("http://localhost:3000/api/v1/devices-control", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          device_name: "led",
           status: "1",
         }),
       })
@@ -58,12 +59,13 @@ function turnOnLight() {
 function turnOffLight() {
   if (ledState === 1) {
     if (confirm("Turn the light off?")) {
-      fetch("http://localhost:3000/api/v1/led", {
+      fetch("http://localhost:3000/api/v1/devices-control", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          device_name: "led",
           status: "0",
         }),
       })
@@ -102,12 +104,12 @@ let initialRotationAngle = 0;
 function turnOnFan() {
   if (fanState === 0) {
     if (confirm("Turn the fan on?")) {
-      fetch("http://localhost:3000/api/v1/fan", {
+      fetch("http://localhost:3000/api/v1/devices-control", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ status: "1" }),
+        body: JSON.stringify({ device_name: "fan", status: "1" }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -128,12 +130,12 @@ function turnOnFan() {
 function turnOffFan() {
   if (fanState === 1) {
     if (confirm("Turn the fan off?")) {
-      fetch("http://localhost:3000/api/v1/fan", {
+      fetch("http://localhost:3000/api/v1/devices-control", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ status: "0" }),
+        body: JSON.stringify({ device_name: "fan", status: "0" }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -229,127 +231,42 @@ function updateChartWithSensorData(temperature, humidity, light, timestamp) {
   chart.update();
 }
 
-function loadLatestSensorData() {
-  fetch("http://localhost:3000/api/v1/sensor")
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.length > 0) {
-        const latestData = data[0];
-        const temperatureData = latestData.temperature;
-        const humidityData = latestData.humidity;
-        const lightData = latestData.light;
+function generateRandomValue() {
+  let temp = getRandomNumber(1, 100);
+  let humid = getRandomNumber(1, 100);
+  let light = getRandomNumber(1, 100);
 
-        document.getElementById("tempValue").innerHTML = temperatureData;
-        document.getElementById("humidValue").innerHTML = humidityData;
-        document.getElementById("lightValue").innerHTML = lightData;
+  changeTextColor(temp, humid, light);
 
-        const timestamp = new Date(latestData.created_at);
-        updateChartWithSensorData(
-          temperatureData,
-          humidityData,
-          lightData,
-          timestamp
-        );
-      }
-    })
-    .catch((error) => {
-      console.error("Error loading latest sensor data:", error);
-    });
+  document.getElementById("tempValue").innerHTML = temp;
+  document.getElementById("lightValue").innerHTML = light;
+  document.getElementById("humidValue").innerHTML = humid;
+
+  function updateChart() {
+    if (chart.data.labels.length > 10) {
+      chart.data.datasets[0].data.shift();
+      chart.data.datasets[1].data.shift();
+      chart.data.datasets[2].data.shift();
+      chart.data.labels.shift();
+    }
+    chart.data.datasets[0].data.push(temp);
+    chart.data.datasets[1].data.push(humid);
+    chart.data.datasets[2].data.push(light);
+    chart.data.labels.push(
+      new Date().getHours() +
+        ":" +
+        new Date().getMinutes() +
+        ":" +
+        new Date().getSeconds()
+    );
+    //update.data.labels.push(new Date().getSeconds());
+    chart.update();
+  }
+  document.querySelectorAll(".informationBox").forEach((box) => {
+    box.classList.remove("blinking-red");
+  });
+  updateChart();
 }
-
-loadLatestSensorData();
-
-function loadInitialChartData() {
-  fetch("http://localhost:3000/api/v1/sensor")
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.length > 0) {
-        data.reverse();
-        data.slice(0, 10).forEach((entry) => {
-          const timestamp = new Date(entry.created_at);
-          chart.data.labels.push(
-            `${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}`
-          );
-          chart.data.datasets[0].data.push(entry.temperature);
-          chart.data.datasets[1].data.push(entry.humidity);
-          chart.data.datasets[2].data.push(entry.light);
-        });
-        chart.update();
-      }
-    })
-    .catch((error) => {
-      console.error("Error loading initial chart data:", error);
-    });
-}
-
-function updateChartWithLatestData() {
-  fetch("http://localhost:3000/api/v1/sensor")
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.length > 0) {
-        const latestData = data[0];
-
-        const temperatureData = latestData.temperature;
-        const humidityData = latestData.humidity;
-        const lightData = latestData.light;
-        const timestamp = new Date(latestData.created_at);
-
-        document.getElementById("tempValue").innerHTML = temperatureData;
-        document.getElementById("humidValue").innerHTML = humidityData;
-        document.getElementById("lightValue").innerHTML = lightData;
-
-        updateChartWithSensorData(
-          temperatureData,
-          humidityData,
-          lightData,
-          timestamp
-        );
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching latest sensor data:", error);
-    });
-}
-
-loadInitialChartData();
-setInterval(updateChartWithLatestData, 3000);
-
-// function generateRandomValue() {
-//   let temp = getRandomNumber(1, 100);
-//   let humid = getRandomNumber(1, 100);
-//   let light = getRandomNumber(1, 100);
-
-//   changeTextColor(temp, humid, light);
-
-//   document.getElementById("tempValue").innerHTML = temp;
-//   document.getElementById("lightValue").innerHTML = light;
-//   document.getElementById("humidValue").innerHTML = humid;
-
-//   function updateChart() {
-//     if (chart.data.labels.length > 10) {
-//       chart.data.datasets[0].data.shift();
-//       chart.data.datasets[1].data.shift();
-//       chart.data.datasets[2].data.shift();
-//       chart.data.labels.shift();
-//     }
-//     chart.data.datasets[0].data.push(temp);
-//     chart.data.datasets[1].data.push(humid);
-//     chart.data.datasets[2].data.push(light);
-//     chart.data.labels.push(
-//       new Date().getHours() +
-//         ":" +
-//         new Date().getMinutes() +
-//         ":" +
-//         new Date().getSeconds()
-//     );
-//     //update.data.labels.push(new Date().getSeconds());
-//     chart.update();
-//   }
-//   document.querySelectorAll(".informationBox").forEach((box) => {
-//     box.classList.remove("blinking-red");
-//   });
-//   updateChart();
-// }
 
 const chart = new Chart("chartInformation", {
   type: "line",
@@ -415,3 +332,87 @@ const chart = new Chart("chartInformation", {
   },
 });
 // setInterval(generateRandomValue, 1000);
+
+// function loadLatestSensorData() {
+//   fetch("http://localhost:3000/api/v1/sensor")
+//     .then((response) => response.json())
+//     .then((data) => {
+//       if (data.length > 0) {
+//         const latestData = data[0];
+//         const temperatureData = latestData.temperature;
+//         const humidityData = latestData.humidity;
+//         const lightData = latestData.light;
+
+//         document.getElementById("tempValue").innerHTML = temperatureData;
+//         document.getElementById("humidValue").innerHTML = humidityData;
+//         document.getElementById("lightValue").innerHTML = lightData;
+
+//         const timestamp = new Date(latestData.created_at);
+//         updateChartWithSensorData(
+//           temperatureData,
+//           humidityData,
+//           lightData,
+//           timestamp
+//         );
+//       }
+//     })
+//     .catch((error) => {
+//       console.error("Error loading latest sensor data:", error);
+//     });
+// }
+
+// loadLatestSensorData();
+
+function loadInitialChartData() {
+  fetch("http://localhost:3000/api/v1/sensor")
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.length > 0) {
+        data.forEach((entry) => {
+          const timestamp = new Date(entry.created_at);
+          chart.data.labels.push(
+            `${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}`
+          );
+          chart.data.datasets[0].data.push(entry.temperature);
+          chart.data.datasets[1].data.push(entry.humidity);
+          chart.data.datasets[2].data.push(entry.light);
+        });
+        chart.update();
+      }
+    })
+    .catch((error) => {
+      console.error("Error loading initial chart data:", error);
+    });
+}
+
+function updateChartWithLatestData() {
+  fetch("http://localhost:3000/api/v1/sensor")
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.length > 0) {
+        const latestData = data[data.length - 1];
+
+        const temperatureData = latestData.temperature;
+        const humidityData = latestData.humidity;
+        const lightData = latestData.light;
+        const timestamp = new Date(latestData.created_at);
+
+        document.getElementById("tempValue").innerHTML = temperatureData;
+        document.getElementById("humidValue").innerHTML = humidityData;
+        document.getElementById("lightValue").innerHTML = lightData;
+
+        updateChartWithSensorData(
+          temperatureData,
+          humidityData,
+          lightData,
+          timestamp
+        );
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching latest sensor data:", error);
+    });
+}
+
+loadInitialChartData();
+setInterval(updateChartWithLatestData, 3000);

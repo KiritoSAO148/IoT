@@ -1,191 +1,119 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const tableBody = document.querySelector("#dataTable tbody");
-  const itemsPerPage = 20;
-  let currentPage = 1;
-  let sortBy = "id";
+  let sortDirection = "asc";
+  let sortField = "id"; // Mặc định sort theo cột "id"
+  let currentPage = 1; // Lưu trang hiện tại
+  let keyword = "";
+  let searchField = "all";
 
-  function renderTable(startIndex, endIndex, data) {
-    tableBody.innerHTML = "";
+  document.querySelectorAll(".sortable").forEach((th) => {
+    th.addEventListener("click", () => {
+      sortField = th.dataset.field; // Lấy giá trị sortField từ thuộc tính data-field của tiêu đề cột
+      sortDirection = sortDirection === "asc" ? "desc" : "asc";
 
-    for (let i = startIndex; i < endIndex; i++) {
-      // console.log(data);
-      const rowData = data[i];
-      if (!rowData) break;
+      getDataForPage(currentPage); // Truyền sortField vào hàm getDataForPage
+    });
+  });
 
-      const row = document.createElement("tr");
-      Object.keys(rowData).forEach((key) => {
-        const cell = document.createElement("td");
-        if (key === "action") {
-          cell.textContent = rowData[key] === "1" ? "ON" : "OFF";
-        } else {
-          cell.textContent = rowData[key];
-        }
-        row.appendChild(cell);
-      });
+  function formatDateTime(dateTimeString) {
+    const date = new Date(dateTimeString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
 
-      tableBody.appendChild(row);
-    }
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
-  function renderPagination(totalPages) {
-    // const totalPages = Math.ceil(data.length / itemsPerPage);
-    const paginationContainer = document.querySelector(".pagination");
+  function displayData(data) {
+    const tableBody = document.querySelector("#dataTable tbody");
+    tableBody.innerHTML = "";
+
+    data.forEach((row) => {
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
+        <td>${row.id}</td>
+        <td>${row.device_name.toUpperCase()}</td>
+        <td>${row.status === "1" ? "ON" : "OFF"}</td>
+        <td>${formatDateTime(row.created_at)}</td>
+      `;
+      tableBody.appendChild(newRow);
+    });
+  }
+
+  function getDataForPage(page, pageSize) {
+    const sortBy = sortDirection;
+    keyword = document.getElementById("searchInput").value;
+    searchField = document.getElementById("searchCategory").value;
+
+    fetch(
+      `http://localhost:3000/api/v1/history-action?page=${page}&pageSize=${pageSize}&sortField=${sortField}&sortBy=${sortBy}&keyword=${keyword}&searchField=${searchField}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        displayData(data.data);
+        updatePagination(data.pagination);
+        currentPage = page;
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
+  const searchButton = document.getElementById("searchButton");
+  searchButton.addEventListener("click", function () {
+    // Gọi hàm getDataForPage để lấy dữ liệu với trang đầu tiên
+    getDataForPage(1, pageSize);
+  });
+
+  const paginationContainer = document.querySelector(".pagination");
+
+  // Hàm cập nhật giao diện phân trang
+  function updatePagination(pagination) {
     paginationContainer.innerHTML = "";
 
-    const maxVisiblePages = 5;
-    const halfMaxVisiblePages = Math.floor(maxVisiblePages / 2);
-    const startPage = Math.max(1, currentPage - halfMaxVisiblePages);
-    const endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+    const { currentPage, totalPages } = pagination;
+    const maxVisiblePages = 5; // Số lượng trang tối đa được hiển thị
 
-    const previousButton = document.createElement("a");
-    previousButton.href = "#";
-    previousButton.textContent = "Previous";
-    previousButton.addEventListener("click", function () {
-      if (currentPage > 1) {
-        currentPage--;
-        renderTable(
-          (currentPage - 1) * itemsPerPage,
-          currentPage * itemsPerPage
-        );
-        renderPagination();
-      }
-    });
-
-    if (currentPage > 1) {
-      paginationContainer.appendChild(previousButton);
-    } else {
-      const disabledPreviousButton = document.createElement("span");
-      disabledPreviousButton.textContent = "Previous";
-      disabledPreviousButton.classList.add("disabled");
-      paginationContainer.appendChild(disabledPreviousButton);
-    }
+    let startPage = currentPage - Math.floor(maxVisiblePages / 2);
+    startPage = Math.max(startPage, 1);
+    let endPage = startPage + maxVisiblePages - 1;
+    endPage = Math.min(endPage, totalPages);
 
     for (let i = startPage; i <= endPage; i++) {
       const pageLink = document.createElement("a");
       pageLink.href = "#";
       pageLink.textContent = i;
-
       if (i === currentPage) {
         pageLink.classList.add("active");
       }
-
-      pageLink.addEventListener("click", function () {
-        currentPage = i;
-        // renderTable(
-        //   (currentPage - 1) * itemsPerPage,
-        //   currentPage * itemsPerPage
-        // );
-        // renderPagination();
-        fetchDataAndRender();
+      pageLink.addEventListener("click", () => {
+        getDataForPage(i, pageSize);
       });
-
       paginationContainer.appendChild(pageLink);
     }
 
-    const nextButton = document.createElement("a");
-    nextButton.href = "#";
-    nextButton.textContent = "Next";
-    nextButton.addEventListener("click", function () {
-      if (currentPage < totalPages) {
-        currentPage++;
-        renderTable(
-          (currentPage - 1) * itemsPerPage,
-          currentPage * itemsPerPage
-        );
-        renderPagination();
-      }
-    });
+    if (startPage > 1) {
+      const prevLink = document.createElement("a");
+      prevLink.href = "#";
+      prevLink.textContent = "Prev";
+      prevLink.addEventListener("click", () => {
+        getDataForPage(currentPage - 1, pageSize);
+      });
+      paginationContainer.prepend(prevLink);
+    }
 
-    if (currentPage < totalPages) {
-      paginationContainer.appendChild(nextButton);
-    } else {
-      const disabledNextButton = document.createElement("span");
-      disabledNextButton.textContent = "Next";
-      disabledNextButton.classList.add("disabled");
-      paginationContainer.appendChild(disabledNextButton);
+    if (endPage < totalPages) {
+      const nextLink = document.createElement("a");
+      nextLink.href = "#";
+      nextLink.textContent = "Next";
+      nextLink.addEventListener("click", () => {
+        getDataForPage(currentPage + 1, pageSize);
+      });
+      paginationContainer.appendChild(nextLink);
     }
   }
 
-  function fetchDataAndRender() {
-    const apiUrl = "http://localhost:3000/api/v1/history-devices";
+  // Gọi hàm lấy dữ liệu cho trang đầu tiên khi trang được tải
 
-    fetch(apiUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        data.reverse();
-
-        data.sort((a, b) => {
-          if (a[sortBy] < b[sortBy]) return -1;
-          if (a[sortBy] > b[sortBy]) return 1;
-          return 0;
-        });
-
-        renderTable(
-          (currentPage - 1) * itemsPerPage,
-          currentPage * itemsPerPage,
-          data
-        );
-        renderPagination(Math.ceil(data.length / itemsPerPage));
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }
-
-  const sortCategorySelect = document.getElementById("sortCategory");
-  sortCategorySelect.addEventListener("change", function () {
-    sortBy = sortCategorySelect.value;
-    currentPage = 1;
-    fetchDataAndRender();
-  });
-
-  // Initial render
-  fetchDataAndRender();
-
-  // Initial render
-  // renderTable(0, itemsPerPage);
-  // renderPagination();
-
-  function searchDataAndRender() {
-    const searchCategorySelect = document.getElementById("searchCategory");
-    const searchInput = document
-      .getElementById("searchInput")
-      .value.toLowerCase();
-    const searchCategory = searchCategorySelect.value;
-
-    fetchSearchDataAndRender(searchCategory, searchInput);
-  }
-
-  function fetchSearchDataAndRender(searchCategory = "all", searchInput = "") {
-    const apiUrl = "http://localhost:3000/api/v1/history-devices";
-
-    fetch(apiUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        data.reverse();
-
-        // Apply search filter
-        data = data.filter((item) => {
-          if (searchCategory === "all") {
-            return (
-              item.device.toLowerCase().includes(searchInput) ||
-              item.action.toLowerCase().includes(searchInput) ||
-              item.date.toLowerCase().includes(searchInput) ||
-              item.time.toLowerCase().includes(searchInput)
-            );
-          } else {
-            return item[searchCategory].toLowerCase().includes(searchInput);
-          }
-        });
-
-        renderTable(
-          (currentPage - 1) * itemsPerPage,
-          currentPage * itemsPerPage,
-          data
-        );
-        renderPagination(Math.ceil(data.length / itemsPerPage));
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }
-
-  const searchButton = document.getElementById("searchButton");
-  searchButton.addEventListener("click", searchDataAndRender);
+  getDataForPage(1, 20); // Gọi hàm với sortField mặc định là "id"
 });

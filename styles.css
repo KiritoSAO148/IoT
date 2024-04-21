@@ -1,0 +1,221 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  font-size: 62.5%;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-color: #fff9db;
+}
+
+nav {
+  background-color: #333;
+  overflow: hidden;
+}
+
+ul {
+  display: flex;
+  justify-content: space-around;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+li {
+  float: left;
+  font-size: 1.6rem;
+}
+
+a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.active {
+  background-color: #4caf50;
+}
+
+.header {
+  text-align: center;
+}
+
+.header .headerText {
+  font-size: 2.4rem;
+  color: #fcc419;
+  margin-top: 1.2rem;
+}
+
+.measurementInformation {
+  margin-top: 1.2rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /* background-color: #fcc419; */
+  height: 15rem;
+  border-radius: 1.2rem;
+}
+
+.measurementInformation .informationBox {
+  height: 10rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30rem;
+  border-radius: 1.2rem;
+}
+
+.informationTempBox {
+  background: linear-gradient(
+    -90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(194, 0, 55, 1) 100%,
+    rgba(219, 1, 1, 1) 100%
+  );
+}
+
+.informationHumidBox {
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(1, 85, 124, 1) 100%,
+    rgba(0, 212, 255, 1) 100%
+  );
+}
+
+.informationLightBox {
+  background: linear-gradient(
+    -90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(190, 186, 89, 1) 100%,
+    rgba(255, 254, 121, 1) 100%
+  );
+}
+
+.informationContainer {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.informationBox .informationHeader {
+  color: #fff;
+  margin-top: 0.4rem;
+  font-size: 2.4rem;
+}
+
+.informationBox .informationText {
+  font-size: 2.4rem;
+  display: flex;
+  margin-top: 1.6rem;
+  gap: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.informationImage {
+  width: 2.4rem;
+}
+
+.controlContent {
+  margin-top: 3.2rem;
+  display: flex;
+  gap: 33rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.chartHeader {
+  text-align: center;
+  margin-bottom: 3.2rem;
+  font-size: 3.2rem;
+  font-weight: 500;
+}
+
+.myChart {
+  background-color: #fcc419;
+  padding: 1.2rem;
+  border-radius: 1.2rem;
+  margin-bottom: 2.8rem;
+}
+
+#chartInformation {
+  width: 100%;
+  height: 40rem;
+  background-color: white;
+}
+
+.controlBox {
+  background-color: #fcc419;
+  width: 25rem;
+  text-align: center;
+  border-radius: 1.2rem;
+}
+
+.controlPanel .img {
+  border-radius: 1.2rem;
+  width: 10rem;
+  padding: 3.2rem;
+}
+
+.btnContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.2rem;
+  margin-bottom: 3.2rem;
+  padding-bottom: 2.4rem;
+  gap: 1.2rem;
+}
+
+.btn {
+  padding: 1.2rem 4rem;
+  border: 0;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.btn:hover {
+  cursor: pointer;
+}
+
+.btn1 {
+  background-color: rgb(19, 125, 18);
+}
+
+.btn2 {
+  background-color: rgb(221, 62, 51);
+}
+
+.btn1:hover,
+.btn1:active {
+  background-color: rgb(44, 173, 39);
+}
+
+.btn2:hover,
+.btn2:active {
+  background-color: rgb(161, 55, 34);
+}
+
+.blinking-alert {
+  animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+  50% {
+    background-color: #ff8787;
+  }
+}
