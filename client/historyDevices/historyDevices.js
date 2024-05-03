@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const searchButton = document.getElementById("searchButton");
   searchButton.addEventListener("click", function () {
     // Gọi hàm getDataForPage để lấy dữ liệu với trang đầu tiên
-    getDataForPage(1, 20);
+    getDataForPage(1, pageSize);
   });
 
   const paginationContainer = document.querySelector(".pagination");
