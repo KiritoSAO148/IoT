@@ -4,7 +4,7 @@ const mysql = require("mysql");
 
 const port = 3000;
 
-const client = mqtt.connect("mqtt://192.188.12.108:2000/", {
+const client = mqtt.connect("mqtt://192.188.12.104:2000/", {
   username: "buiquochuy",
   password: "buiqhuy148",
 });
