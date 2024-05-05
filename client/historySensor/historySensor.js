@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
         <td>${row.temperature}</td>
         <td>${row.humidity}</td>
         <td>${row.light}</td>
-        <td>${row.dust}</td>
         <td>${formatDateTime(row.created_at)}</td>
       `;
       tableBody.appendChild(newRow);

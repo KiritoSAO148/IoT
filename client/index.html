@@ -17,150 +17,161 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
-    <nav>
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a href="./" class="nav-link">IOT DASHBOARD</a>
-        </li>
-        <li class="nav-item">
-          <a href="./historyDevices/historyDevices.html" class="nav-link"
-            >HISTORY DEVICES</a
-          >
-        </li>
-        <li class="nav-item">
-          <a href="./historySensor/historySensor.html" class="nav-link"
-            >HISTORY SENSORS</a
-          >
-        </li>
-        <li class="nav-item">
-          <a href="./profile/profile.html" class="nav-link">PROFILE</a>
-        </li>
-      </ul>
-    </nav>
-
-    <div class="measurementInformation">
-      <div class="informationBox informationTempBox">
-        <div class="informationContainer">
-          <p class="informationHeader">Temperature</p>
-          <img
-            src="./public/temprature.png"
-            alt="Temperature image"
-            class="informationImage"
-          />
-        </div>
-        <div class="informationText">
-          <p id="tempValue">20</p>
-          <p id="tempUnit">°C</p>
-        </div>
-      </div>
-
-      <div class="informationBox informationHumidBox">
-        <div class="informationContainer">
-          <p class="informationHeader">Humidity</p>
-          <img
-            src="./public/drop.png"
-            alt="Humidity image"
-            class="informationImage"
-          />
-        </div>
-        <div class="informationText">
-          <p id="humidValue">80</p>
-          <p id="humidUnit">%</p>
-        </div>
-      </div>
-
-      <div class="informationBox informationLightBox">
-        <div class="informationContainer">
-          <p class="informationHeader">Light</p>
-          <img
-            src="./public/sunny.png"
-            alt="Light image"
-            class="informationImage"
-          />
-        </div>
-        <div class="informationText">
-          <p id="lightValue">100</p>
-          <p id="lightUnit">lux</p>
-        </div>
-      </div>
-
-      <div class="informationBox informationDustBox">
-        <div class="informationContainer">
-          <p class="informationHeader">Dust</p>
-          <img
-            src="./public/sunny.png"
-            alt="Dust image"
-            class="informationImage"
-          />
-        </div>
-        <div class="informationText">
-          <p id="dustValue">100</p>
-          <p id="dustUnit">lux</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="controlContent">
-      <div class="myChart">
-        <!-- <p class="chartHeader">CHART</p> -->
-        <!-- <img src="./public/img2.png" alt="My Chart" class="chartInformation" /> -->
-        <canvas
-          id="chartInformation"
-          style="
-            width: 100%;
-            max-width: 60rem;
-            max-height: 40rem;
-            background-color: white;
-          "
-        ></canvas>
-      </div>
-
-      <div class="controlPanel">
-        <div class="controlBox lightControl">
-          <img
-            src="./public/lightoff.png"
-            alt="Light is turned off"
-            class="img myLight"
-          />
-          <div class="btnContainer">
-            <button
-              type="button"
-              class="btn btn1 btnLightOn text-light"
-              onclick="turnOnLight()"
+    <div class="container">
+      <nav>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a href="./" class="nav-link">IOT DASHBOARD</a>
+          </li>
+          <li class="nav-item">
+            <a href="./historyDevices/historyDevices.html" class="nav-link"
+              >HISTORY DEVICES</a
             >
-              ON
-            </button>
-            <button
-              type="button"
-              class="btn btn2 btnLightOff text-light"
-              onclick="turnOffLight()"
+          </li>
+          <li class="nav-item">
+            <a href="./historySensor/historySensor.html" class="nav-link"
+              >HISTORY SENSORS</a
             >
-              OFF
-            </button>
+          </li>
+          <li class="nav-item">
+            <a href="./profile/profile.html" class="nav-link">PROFILE</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="measurementInformation">
+        <div class="informationBox informationTempBox">
+          <div class="informationContainer">
+            <p class="informationHeader">Temperature</p>
+            <img
+              src="./public/temprature.png"
+              alt="Temperature image"
+              class="informationImage"
+            />
+          </div>
+          <div class="informationText">
+            <p id="tempValue">20</p>
+            <p id="tempUnit">°C</p>
           </div>
         </div>
 
-        <div class="controlBox fanControl">
-          <img
-            src="./public/fan.png"
-            alt="Fan is turned off"
-            class="img myFan"
-          />
-          <div class="btnContainer">
-            <button
-              type="button"
-              class="btn btn1 btnFanOn text-fan"
-              onclick="turnOnFan()"
-            >
-              ON
-            </button>
-            <button
-              type="button"
-              class="btn btn2 btnFanOff text-fan"
-              onclick="turnOffFan()"
-            >
-              OFF
-            </button>
+        <div class="informationBox informationHumidBox">
+          <div class="informationContainer">
+            <p class="informationHeader">Humidity</p>
+            <img
+              src="./public/drop.png"
+              alt="Humidity image"
+              class="informationImage"
+            />
+          </div>
+          <div class="informationText">
+            <p id="humidValue">80</p>
+            <p id="humidUnit">%</p>
+          </div>
+        </div>
+
+        <div class="informationBox informationLightBox">
+          <div class="informationContainer">
+            <p class="informationHeader">Light</p>
+            <img
+              src="./public/sunny.png"
+              alt="Light image"
+              class="informationImage"
+            />
+          </div>
+          <div class="informationText">
+            <p id="lightValue">100</p>
+            <p id="lightUnit">lux</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="controlContent">
+        <div class="myChart">
+          <!-- <p class="chartHeader">CHART</p> -->
+          <!-- <img src="./public/img2.png" alt="My Chart" class="chartInformation" /> -->
+          <canvas
+            id="chartInformation"
+            style="
+              width: 100%;
+              max-width: 60rem;
+              max-height: 40rem;
+              background-color: white;
+            "
+          ></canvas>
+        </div>
+
+        <div class="controlPanel">
+          <div class="controlBox lightControl">
+            <img
+              src="./public/lightoff.png"
+              alt="Light is turned off"
+              class="img myLight"
+            />
+            <div class="btnContainer">
+              <button
+                type="button"
+                class="btn btn1 btnLightOn text-light"
+                onclick="turnOnLight()"
+              >
+                ON
+              </button>
+              <button
+                type="button"
+                class="btn btn2 btnLightOff text-light"
+                onclick="turnOffLight()"
+              >
+                OFF
+              </button>
+            </div>
+          </div>
+
+          <div class="controlBox fanControl">
+            <img
+              src="./public/fan.png"
+              alt="Fan is turned off"
+              class="img myFan"
+            />
+            <div class="btnContainer">
+              <button
+                type="button"
+                class="btn btn1 btnFanOn text-fan"
+                onclick="turnOnFan()"
+              >
+                ON
+              </button>
+              <button
+                type="button"
+                class="btn btn2 btnFanOff text-fan"
+                onclick="turnOffFan()"
+              >
+                OFF
+              </button>
+            </div>
+          </div>
+
+          <div class="controlBox airconditionControl">
+            <img
+              src="./public/air-conditioner.png"
+              alt="Aircondition is turned off"
+              class="img myAircondition"
+            />
+            <div class="btnContainer">
+              <button
+                type="button"
+                class="btn btn1 btnAirconditionOn text-aircondition"
+                onclick="turnOnAircondition()"
+              >
+                ON
+              </button>
+              <button
+                type="button"
+                class="btn btn2 btnAirconditionOff text-aircondition"
+                onclick="turnOffAircondition()"
+              >
+                OFF
+              </button>
+            </div>
           </div>
         </div>
       </div>

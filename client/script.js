@@ -1,20 +1,22 @@
 const lightImage = document.querySelector(".myLight");
 const fanImage = document.querySelector(".myFan");
+const airconditionImage = document.querySelector(".myAircondition");
 const btnLightOn = document.querySelector(".btnLightOn");
 const btnLightOff = document.querySelector(".btnLightOff");
 const btnFanOn = document.querySelector(".btnFanOn");
 const btnFanOff = document.querySelector(".btnFanOff");
+const btnAirconditionOn = document.querySelector(".btnAirconditionOn");
+const btnAirconditionOff = document.querySelector(".btnAirconditionOff");
 const tempValue = document.getElementById("tempValue");
 const humidValue = document.getElementById("humidValue");
 const lightValue = document.getElementById("lightValue");
-const dustValue = document.getElementById("dustValue");
 const informationTempBox = document.querySelector(".informationTempBox");
 const informationHumidBox = document.querySelector(".informationHumidBox");
 const informationLightBox = document.querySelector(".informationLightBox");
-const informationDustBox = document.querySelector(".informationDustBox");
 
 let ledState = 0;
 let fanState = 0;
+let airconditionState = 0;
 
 function init() {
   if (ledState === 0) {
@@ -24,6 +26,10 @@ function init() {
   if (fanState === 0) {
     btnFanOn.style.backgroundColor = "rgb(19, 125, 18)";
     btnFanOff.style.backgroundColor = "rgb(221, 62, 51)";
+  }
+  if (airconditionState === 0) {
+    btnAirconditionOn.style.backgroundColor = "rgb(19, 125, 18)";
+    btnAirconditionOff.style.backgroundColor = "rgb(221, 62, 51)";
   }
 }
 
@@ -156,6 +162,64 @@ function turnOffFan() {
   }
 }
 
+function turnOnAircondition() {
+  if (airconditionState === 0) {
+    if (confirm("Turn the aircondition on?")) {
+      fetch("http://localhost:3000/api/v1/devices-control", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          device_name: "aircondition",
+          status: "1",
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const currentAirconditionState = data.airconditionState;
+          console.log(data.airconditionState);
+
+          if (data.airconditionState === 1) {
+            airconditionImage.src = "./public/air-vent.png";
+            btnAirconditionOn.style.backgroundColor = "rgb(44, 173, 39)";
+            btnAirconditionOff.style.backgroundColor = "rgb(161, 55, 34)";
+            airconditionState = 1;
+          }
+        });
+    }
+  }
+}
+
+function turnOffAircondition() {
+  if (airconditionState === 1) {
+    if (confirm("Turn the aircondition off?")) {
+      fetch("http://localhost:3000/api/v1/devices-control", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          device_name: "aircondition",
+          status: "0",
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const currentAirconditionState = data.airconditionState;
+          console.log(data.airconditionState);
+
+          if (data.airconditionState === 0) {
+            airconditionImage.src = "./public/air-conditioner.png";
+            btnAirconditionOn.style.backgroundColor = "rgb(19, 125, 18)";
+            btnAirconditionOff.style.backgroundColor = "rgb(221, 62, 51)";
+            airconditionState = 0;
+          }
+        });
+    }
+  }
+}
+
 function createBlinkingAlert() {
   const alertDiv = document.querySelector(".informationBox");
 
@@ -168,7 +232,7 @@ function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function changeTextColor(temp, humid, light, dust) {
+function changeTextColor(temp, humid, light) {
   if (temp > 80) {
     informationTempBox.style.background =
       "linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(194,0,55,1) 0%, rgba(219,1,1,1) 100%)";
@@ -207,41 +271,20 @@ function changeTextColor(temp, humid, light, dust) {
   } else {
     informationLightBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 100%, rgba(255,254,121,1) 100%)`;
   }
-
-  if (dust > 80) {
-    informationLightBox.style.background =
-      "linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 0%, rgba(255,254,121,1) 100%)";
-  } else if (dust > 60) {
-    informationLightBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 25%, rgba(255,254,121,1) 100%)`;
-  } else if (dust > 40) {
-    informationLightBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 50%, rgba(255,254,121,1) 100%)`;
-  } else if (dust > 20) {
-    informationLightBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 75%, rgba(255,254,121,1) 100%)`;
-  } else {
-    informationDustBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 100%, rgba(255,254,121,1) 100%)`;
-  }
 }
 
-function updateChartWithSensorData(
-  temperature,
-  humidity,
-  light,
-  dust,
-  timestamp
-) {
-  changeTextColor(temperature, humidity, light, dust);
+function updateChartWithSensorData(temperature, humidity, light, timestamp) {
+  changeTextColor(temperature, humidity, light);
 
   document.getElementById("tempValue").innerHTML = temperature;
   document.getElementById("lightValue").innerHTML = light;
   document.getElementById("humidValue").innerHTML = humidity;
-  document.getElementById("dustValue").innerHTML = dust;
 
   if (chart.data.labels.length >= 10) {
     chart.data.labels.shift();
     chart.data.datasets[0].data.shift();
     chart.data.datasets[1].data.shift();
     chart.data.datasets[2].data.shift();
-    chart.data.datasets[3].data.shift();
   }
 
   chart.data.labels.push(
@@ -251,7 +294,6 @@ function updateChartWithSensorData(
   chart.data.datasets[0].data.push(temperature);
   chart.data.datasets[1].data.push(humidity);
   chart.data.datasets[2].data.push(light);
-  chart.data.datasets[3].data.push(dust);
 
   chart.update();
 }
@@ -318,14 +360,6 @@ const chart = new Chart("chartInformation", {
         label: "Light",
         borderColor: "orange",
         backgroundColor: "orange",
-        lineTension: 0,
-        data: [],
-        fill: false,
-      },
-      {
-        label: "Dust",
-        borderColor: "green",
-        backgroundColor: "green",
         lineTension: 0,
         data: [],
         fill: false,
@@ -409,7 +443,6 @@ function loadInitialChartData() {
           chart.data.datasets[0].data.push(entry.temperature);
           chart.data.datasets[1].data.push(entry.humidity);
           chart.data.datasets[2].data.push(entry.light);
-          chart.data.datasets[3].data.push(entry.dust);
         });
         chart.update();
       }
@@ -429,19 +462,16 @@ function updateChartWithLatestData() {
         const temperatureData = latestData.temperature;
         const humidityData = latestData.humidity;
         const lightData = latestData.light;
-        const dustData = latestData.dust;
         const timestamp = new Date(latestData.created_at);
 
         document.getElementById("tempValue").innerHTML = temperatureData;
         document.getElementById("humidValue").innerHTML = humidityData;
         document.getElementById("lightValue").innerHTML = lightData;
-        document.getElementById("dustValue").innerHTML = dustData;
 
         updateChartWithSensorData(
           temperatureData,
           humidityData,
           lightData,
-          dustData,
           timestamp
         );
       }

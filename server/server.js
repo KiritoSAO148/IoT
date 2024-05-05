@@ -29,16 +29,17 @@ client.on("error", (error) => {
 
 let currentLedState = 0;
 let currentFanState = 0;
+let currentAirconditionState = 0;
 
 client.on("message", (topic, message) => {
   if (topic === "huy/sensor") {
     const sensorData = JSON.parse(message);
-    const { temperature, humidity, light, dust } = sensorData;
+    const { temperature, humidity, light } = sensorData;
 
     const sql =
-      "INSERT INTO data_sensor (temperature, humidity, light, dust, created_at) VALUES (?, ?, ?, ?, NOW())";
+      "INSERT INTO data_sensor (temperature, humidity, light, created_at) VALUES (?, ?, ?, NOW())";
 
-    db.query(sql, [temperature, humidity, light, dust], (err, result) => {
+    db.query(sql, [temperature, humidity, light], (err, result) => {
       if (err) {
         console.error("Error inserting into data_sensor:", err);
       } else {
@@ -65,6 +66,7 @@ db.connect((err) => {
 
 let ledState = 0;
 let fanState = 0;
+let airconditionState = 0;
 
 app.post("/api/v1/devices-control", (req, res) => {
   const { device_name, status } = req.body;
@@ -73,6 +75,8 @@ app.post("/api/v1/devices-control", (req, res) => {
     ledState = status === "1" ? 1 : 0;
   } else if (device_name === "fan") {
     fanState = status === "1" ? 1 : 0;
+  } else if (device_name === "aircondition") {
+    airconditionState = status === "1" ? 1 : 0;
   }
 
   try {
@@ -81,20 +85,24 @@ app.post("/api/v1/devices-control", (req, res) => {
       JSON.stringify({
         led: `${ledState ? "on" : "off"}`,
         fan: `${fanState ? "on" : "off"}`,
+        aircondition: `${airconditionState ? "on" : "off"}`,
       })
     );
 
     const messageListener = (topic, message) => {
       if (topic === "devices/status") {
-        const { led, fan } = JSON.parse(message);
+        const { led, fan, aircondition } = JSON.parse(message);
         currentLedState = led === "on" ? 1 : 0;
         currentFanState = fan === "on" ? 1 : 0;
+        currentAirconditionState = aircondition === "on" ? 1 : 0;
 
         // console.log(currentLedState, currentFanState);
 
-        res
-          .status(200)
-          .json({ ledState: currentLedState, fanState: currentFanState });
+        res.status(200).json({
+          ledState: currentLedState,
+          fanState: currentFanState,
+          airconditionState: currentAirconditionState,
+        });
 
         client.removeListener("message", messageListener);
       }
@@ -129,132 +137,6 @@ app.listen(port, "127.0.0.1", () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
 
-// app.post("/api/v1/led", (req, res) => {
-//   const { status } = req.body;
-//   // console.log(status);
-//   const device_name = "led";
-
-//   ledState = status === "1" ? 1 : 0;
-
-//   // console.log("Led State: ", ledState);
-//   // console.log("Fan State: ", fanState);
-
-//   try {
-//     client.publish(
-//       "devices/control",
-//       JSON.stringify({
-//         led: `${ledState ? "on" : "off"}`,
-//         fan: `${fanState ? "on" : "off"}`,
-//       })
-//     );
-
-//     const messageListener = (topic, message) => {
-//       if (topic === "devices/status") {
-//         const { led } = JSON.parse(message);
-//         currentLedState = led === "on" ? 1 : 0;
-
-//         res.status(200).json({ ledState: currentLedState });
-
-//         client.removeListener("message", messageListener);
-//       }
-//     };
-
-//     client.on("message", messageListener);
-
-//     // console.log("Published to MQTT:", {
-//     //   led: `${ledState ? "on" : "off"}`,
-//     //   fan: `${fanState ? "on" : "off"}`,
-//     // });
-//   } catch (err) {
-//     console.error("Error publishing to MQTT:", err.message);
-//     res.status(500).send("Internal Server Error");
-//   }
-
-//   const sql =
-//     "INSERT INTO action_history (device_name, status, created_at) VALUES (?, ?, NOW())";
-
-//   db.query(sql, [device_name, status], (err, result) => {
-//     if (err) {
-//       console.error("Error inserting into action_history:", err);
-//       res.status(500).send("Internal Server Error");
-//     } else {
-//       // console.log("Record inserted into action_history");
-//       // res.status(200).json({ ledState: currentLedState });
-//     }
-//   });
-// });
-
-// app.post("/api/v1/fan", (req, res) => {
-//   const { status } = req.body;
-//   // console.log(status);
-//   const device_name = "fan";
-
-//   fanState = status === "1" ? 1 : 0;
-
-//   // console.log("Led State: ", ledState);
-//   // console.log("Fan State: ", fanState);
-
-//   try {
-//     client.publish(
-//       "devices/control",
-//       JSON.stringify({
-//         led: `${ledState ? "on" : "off"}`,
-//         fan: `${fanState ? "on" : "off"}`,
-//       })
-//     );
-
-//     const messageListener = (topic, message) => {
-//       if (topic === "devices/status") {
-//         const { fan } = JSON.parse(message);
-//         currentFanState = fan === "on" ? 1 : 0;
-
-//         res.status(200).json({ fanState: currentFanState });
-
-//         client.removeListener("message", messageListener);
-//       }
-//     };
-
-//     client.on("message", messageListener);
-
-//     // console.log("Published to MQTT:", {
-//     //   led: `${ledState ? "on" : "off"}`,
-//     //   fan: `${fanState ? "on" : "off"}`,
-//     // });
-//   } catch (err) {
-//     console.error("Error publishing to MQTT:", err.message);
-//     res.status(500).send("Internal Server Error");
-//   }
-
-//   const sql =
-//     "INSERT INTO action_history (device_name, status, created_at) VALUES (?, ?, NOW())";
-
-//   db.query(sql, [device_name, status], (err, result) => {
-//     if (err) {
-//       // console.error("Error inserting into action_history:", err);
-//       res.status(500).send("Internal Server Error");
-//     } else {
-//       // console.log("Record inserted into action_history");
-//       // res.status(200).json({ fanState: currentFanState });
-//     }
-//   });
-// });
-
-// app.post("/api/v1/sensor", (req, res) => {
-//   const { temperature, humidity, light } = req.body;
-
-//   const sql =
-//     "INSERT INTO data_sensor (temperature, humidity, light, created_at) VALUES (?, ?, ?, NOW())";
-//   db.query(sql, [temperature, humidity, light], (err, result) => {
-//     if (err) {
-//       console.error("Error inserting into data_sensor:", err);
-//       res.status(500).send("Internal Server Error");
-//     } else {
-//       console.log("Sensor data inserted into the database");
-//       res.status(200).send("OK");
-//     }
-//   });
-// });
-
 app.get("/api/v1/sensor", (req, res) => {
   const sql = "SELECT * FROM data_sensor ORDER BY created_at DESC LIMIT 10";
 
@@ -286,14 +168,7 @@ app.get("/api/v1/history-sensor", (req, res) => {
     searchCondition = ` WHERE ${searchField} LIKE ?`;
     searchValues = [`%${keyword.trim()}%`];
   } else if (searchField === "all" && keyword.trim() !== "") {
-    const columns = [
-      "id",
-      "temperature",
-      "humidity",
-      "light",
-      "dust",
-      "created_at",
-    ];
+    const columns = ["id", "temperature", "humidity", "light", "created_at"];
     const conditions = columns.map((column) => `${column} LIKE ?`).join(" OR ");
     searchCondition = ` WHERE ${conditions}`;
     searchValues = columns.map(() => `%${keyword.trim()}%`);
@@ -412,60 +287,3 @@ app.get("/api/v1/history-action", (req, res) => {
     });
   });
 });
-
-// app.get("/api/v1/history-devices", (req, res) => {
-//   res.setHeader("Cache-Control", "no-store, max-age=0");
-
-//   const query =
-//     "SELECT id, device_name, status, created_at FROM action_history";
-
-//   db.query(query, (error, results, fields) => {
-//     if (error) {
-//       res.status(500).json({ error: "Internal Server Error" });
-//       return;
-//     }
-
-//     // Chuyển đổi định dạng của created_at và thêm vào mảng data
-//     const formattedData = results.map((result) => {
-//       const createdAt = new Date(result.created_at);
-//       return {
-//         id: result.id,
-//         device: result.device_name,
-//         action: result.status,
-//         date: createdAt.toISOString().split("T")[0], // Lấy ngày
-//         time: createdAt.toLocaleTimeString(), // Lấy giờ
-//       };
-//     });
-
-//     res.json(formattedData);
-//   });
-// });
-
-// app.get("/api/v1/history-sensor", (req, res) => {
-//   res.setHeader("Cache-Control", "no-store, max-age=0");
-
-//   const query =
-//     "SELECT id, temperature, humidity, light, created_at FROM data_sensor";
-
-//   db.query(query, (error, results, fields) => {
-//     if (error) {
-//       res.status(500).json({ error: "Internal Server Error" });
-//       return;
-//     }
-
-//     // Chuyển đổi định dạng của created_at và thêm vào mảng data
-//     const formattedData = results.map((result) => {
-//       const createdAt = new Date(result.created_at);
-//       return {
-//         id: result.id,
-//         temperature: result.temperature,
-//         humidity: result.humidity,
-//         light: result.light,
-//         date: createdAt.toISOString().split("T")[0], // Lấy ngày
-//         time: createdAt.toLocaleTimeString(), // Lấy giờ
-//       };
-//     });
-
-//     res.json(formattedData);
-//   });
-// });
