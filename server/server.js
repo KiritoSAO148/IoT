@@ -33,12 +33,12 @@ let currentFanState = 0;
 client.on("message", (topic, message) => {
   if (topic === "huy/sensor") {
     const sensorData = JSON.parse(message);
-    const { temperature, humidity, light } = sensorData;
+    const { temperature, humidity, light, dust } = sensorData;
 
     const sql =
-      "INSERT INTO data_sensor (temperature, humidity, light, created_at) VALUES (?, ?, ?, NOW())";
+      "INSERT INTO data_sensor (temperature, humidity, light, dust, created_at) VALUES (?, ?, ?, ?, NOW())";
 
-    db.query(sql, [temperature, humidity, light], (err, result) => {
+    db.query(sql, [temperature, humidity, light, dust], (err, result) => {
       if (err) {
         console.error("Error inserting into data_sensor:", err);
       } else {
@@ -52,7 +52,7 @@ const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "Huy2582002",
-  database: "iot",
+  database: "iot_demo",
 });
 
 db.connect((err) => {
@@ -286,7 +286,14 @@ app.get("/api/v1/history-sensor", (req, res) => {
     searchCondition = ` WHERE ${searchField} LIKE ?`;
     searchValues = [`%${keyword.trim()}%`];
   } else if (searchField === "all" && keyword.trim() !== "") {
-    const columns = ["id", "temperature", "humidity", "light", "created_at"];
+    const columns = [
+      "id",
+      "temperature",
+      "humidity",
+      "light",
+      "dust",
+      "created_at",
+    ];
     const conditions = columns.map((column) => `${column} LIKE ?`).join(" OR ");
     searchCondition = ` WHERE ${conditions}`;
     searchValues = columns.map(() => `%${keyword.trim()}%`);

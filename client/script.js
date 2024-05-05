@@ -7,9 +7,11 @@ const btnFanOff = document.querySelector(".btnFanOff");
 const tempValue = document.getElementById("tempValue");
 const humidValue = document.getElementById("humidValue");
 const lightValue = document.getElementById("lightValue");
+const dustValue = document.getElementById("dustValue");
 const informationTempBox = document.querySelector(".informationTempBox");
 const informationHumidBox = document.querySelector(".informationHumidBox");
 const informationLightBox = document.querySelector(".informationLightBox");
+const informationDustBox = document.querySelector(".informationDustBox");
 
 let ledState = 0;
 let fanState = 0;
@@ -166,7 +168,7 @@ function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function changeTextColor(temp, humid, light) {
+function changeTextColor(temp, humid, light, dust) {
   if (temp > 80) {
     informationTempBox.style.background =
       "linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(194,0,55,1) 0%, rgba(219,1,1,1) 100%)";
@@ -205,28 +207,51 @@ function changeTextColor(temp, humid, light) {
   } else {
     informationLightBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 100%, rgba(255,254,121,1) 100%)`;
   }
+
+  if (dust > 80) {
+    informationLightBox.style.background =
+      "linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 0%, rgba(255,254,121,1) 100%)";
+  } else if (dust > 60) {
+    informationLightBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 25%, rgba(255,254,121,1) 100%)`;
+  } else if (dust > 40) {
+    informationLightBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 50%, rgba(255,254,121,1) 100%)`;
+  } else if (dust > 20) {
+    informationLightBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 75%, rgba(255,254,121,1) 100%)`;
+  } else {
+    informationDustBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 100%, rgba(255,254,121,1) 100%)`;
+  }
 }
 
-function updateChartWithSensorData(temperature, humidity, light, timestamp) {
-  changeTextColor(temperature, humidity, light);
+function updateChartWithSensorData(
+  temperature,
+  humidity,
+  light,
+  dust,
+  timestamp
+) {
+  changeTextColor(temperature, humidity, light, dust);
 
   document.getElementById("tempValue").innerHTML = temperature;
   document.getElementById("lightValue").innerHTML = light;
   document.getElementById("humidValue").innerHTML = humidity;
+  document.getElementById("dustValue").innerHTML = dust;
 
   if (chart.data.labels.length >= 10) {
     chart.data.labels.shift();
     chart.data.datasets[0].data.shift();
     chart.data.datasets[1].data.shift();
     chart.data.datasets[2].data.shift();
+    chart.data.datasets[3].data.shift();
   }
 
   chart.data.labels.push(
     `${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}`
   );
+
   chart.data.datasets[0].data.push(temperature);
   chart.data.datasets[1].data.push(humidity);
   chart.data.datasets[2].data.push(light);
+  chart.data.datasets[3].data.push(dust);
 
   chart.update();
 }
@@ -293,6 +318,14 @@ const chart = new Chart("chartInformation", {
         label: "Light",
         borderColor: "orange",
         backgroundColor: "orange",
+        lineTension: 0,
+        data: [],
+        fill: false,
+      },
+      {
+        label: "Dust",
+        borderColor: "green",
+        backgroundColor: "green",
         lineTension: 0,
         data: [],
         fill: false,
@@ -376,6 +409,7 @@ function loadInitialChartData() {
           chart.data.datasets[0].data.push(entry.temperature);
           chart.data.datasets[1].data.push(entry.humidity);
           chart.data.datasets[2].data.push(entry.light);
+          chart.data.datasets[3].data.push(entry.dust);
         });
         chart.update();
       }
@@ -395,16 +429,19 @@ function updateChartWithLatestData() {
         const temperatureData = latestData.temperature;
         const humidityData = latestData.humidity;
         const lightData = latestData.light;
+        const dustData = latestData.dust;
         const timestamp = new Date(latestData.created_at);
 
         document.getElementById("tempValue").innerHTML = temperatureData;
         document.getElementById("humidValue").innerHTML = humidityData;
         document.getElementById("lightValue").innerHTML = lightData;
+        document.getElementById("dustValue").innerHTML = dustData;
 
         updateChartWithSensorData(
           temperatureData,
           humidityData,
           lightData,
+          dustData,
           timestamp
         );
       }

@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <td>${row.temperature}</td>
         <td>${row.humidity}</td>
         <td>${row.light}</td>
+        <td>${row.dust}</td>
         <td>${formatDateTime(row.created_at)}</td>
       `;
       tableBody.appendChild(newRow);
@@ -63,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const searchButton = document.getElementById("searchButton");
   searchButton.addEventListener("click", function () {
     // Gọi hàm getDataForPage để lấy dữ liệu với trang đầu tiên
-    getDataForPage(1, 20);
+    getDataForPage(1, 10);
   });
 
   const paginationContainer = document.querySelector(".pagination");
@@ -88,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
         pageLink.classList.add("active");
       }
       pageLink.addEventListener("click", () => {
-        getDataForPage(i, 20);
+        getDataForPage(i, 10);
       });
       paginationContainer.appendChild(pageLink);
     }
@@ -98,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
       prevLink.href = "#";
       prevLink.textContent = "Prev";
       prevLink.addEventListener("click", () => {
-        getDataForPage(currentPage - 1, 20);
+        getDataForPage(currentPage - 1, 10);
       });
       paginationContainer.prepend(prevLink);
     }
@@ -108,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
       nextLink.href = "#";
       nextLink.textContent = "Next";
       nextLink.addEventListener("click", () => {
-        getDataForPage(currentPage + 1, 20);
+        getDataForPage(currentPage + 1, 10);
       });
       paginationContainer.appendChild(nextLink);
     }
@@ -116,5 +117,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Gọi hàm lấy dữ liệu cho trang đầu tiên khi trang được tải
 
-  getDataForPage(1, 20); // Gọi hàm với sortField mặc định là "id"
+  getDataForPage(1, 10); // Gọi hàm với sortField mặc định là "id"
 });

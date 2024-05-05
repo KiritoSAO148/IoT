@@ -105,6 +105,15 @@ a:hover {
   );
 }
 
+.informationDustBox {
+  background: linear-gradient(
+    -90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(190, 186, 89, 1) 100%,
+    rgba(255, 254, 121, 1) 100%
+  );
+}
+
 .informationContainer {
   display: flex;
   align-items: center;
