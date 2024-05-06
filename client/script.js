@@ -1,35 +1,33 @@
 const lightImage = document.querySelector(".myLight");
 const fanImage = document.querySelector(".myFan");
-const airconditionImage = document.querySelector(".myAircondition");
 const btnLightOn = document.querySelector(".btnLightOn");
 const btnLightOff = document.querySelector(".btnLightOff");
 const btnFanOn = document.querySelector(".btnFanOn");
 const btnFanOff = document.querySelector(".btnFanOff");
-const btnAirconditionOn = document.querySelector(".btnAirconditionOn");
-const btnAirconditionOff = document.querySelector(".btnAirconditionOff");
 const tempValue = document.getElementById("tempValue");
 const humidValue = document.getElementById("humidValue");
 const lightValue = document.getElementById("lightValue");
 const informationTempBox = document.querySelector(".informationTempBox");
 const informationHumidBox = document.querySelector(".informationHumidBox");
 const informationLightBox = document.querySelector(".informationLightBox");
+const textLightOn = document.querySelector(".text-light-on");
+const textLightOff = document.querySelector(".text-light-off");
+const textFanOn = document.querySelector(".text-fan-on");
+const textFanOff = document.querySelector(".text-fan-off");
 
 let ledState = 0;
 let fanState = 0;
-let airconditionState = 0;
 
 function init() {
   if (ledState === 0) {
     btnLightOff.style.backgroundColor = "rgb(221, 62, 51)";
     btnLightOn.style.backgroundColor = "rgb(19, 125, 18)";
+    textLightOff.style.color = "white";
   }
   if (fanState === 0) {
     btnFanOn.style.backgroundColor = "rgb(19, 125, 18)";
     btnFanOff.style.backgroundColor = "rgb(221, 62, 51)";
-  }
-  if (airconditionState === 0) {
-    btnAirconditionOn.style.backgroundColor = "rgb(19, 125, 18)";
-    btnAirconditionOff.style.backgroundColor = "rgb(221, 62, 51)";
+    textFanOff.style.color = "white";
   }
 }
 
@@ -57,6 +55,8 @@ function turnOnLight() {
             lightImage.src = "./public/lighton.png";
             btnLightOn.style.backgroundColor = "rgb(44, 173, 39)";
             btnLightOff.style.backgroundColor = "rgb(161, 55, 34)";
+            textLightOn.style.color = "white";
+            textLightOff.style.color = "black";
             ledState = 1;
           }
         });
@@ -86,6 +86,8 @@ function turnOffLight() {
             lightImage.src = "./public/lightoff.png";
             btnLightOn.style.backgroundColor = "rgb(19, 125, 18)";
             btnLightOff.style.backgroundColor = "rgb(221, 62, 51)";
+            textLightOff.style.color = "white";
+            textLightOn.style.color = "black";
             ledState = 0;
           }
         });
@@ -128,6 +130,8 @@ function turnOnFan() {
             rotationInterval = setInterval(rotateImage, 5);
             btnFanOn.style.backgroundColor = "rgb(44, 173, 39)";
             btnFanOff.style.backgroundColor = "rgb(161, 55, 34)";
+            textFanOn.style.color = "white";
+            textFanOff.style.color = "black";
             fanState = 1;
           }
         });
@@ -155,65 +159,9 @@ function turnOffFan() {
             fanImage.style.transform = `rotate(${initialRotationAngle}deg)`;
             btnFanOn.style.backgroundColor = "rgb(19, 125, 18)";
             btnFanOff.style.backgroundColor = "rgb(221, 62, 51)";
+            textFanOff.style.color = "white";
+            textFanOn.style.color = "black";
             fanState = 0;
-          }
-        });
-    }
-  }
-}
-
-function turnOnAircondition() {
-  if (airconditionState === 0) {
-    if (confirm("Turn the aircondition on?")) {
-      fetch("http://localhost:3000/api/v1/devices-control", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          device_name: "aircondition",
-          status: "1",
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          const currentAirconditionState = data.airconditionState;
-          console.log(data.airconditionState);
-
-          if (data.airconditionState === 1) {
-            airconditionImage.src = "./public/air-vent.png";
-            btnAirconditionOn.style.backgroundColor = "rgb(44, 173, 39)";
-            btnAirconditionOff.style.backgroundColor = "rgb(161, 55, 34)";
-            airconditionState = 1;
-          }
-        });
-    }
-  }
-}
-
-function turnOffAircondition() {
-  if (airconditionState === 1) {
-    if (confirm("Turn the aircondition off?")) {
-      fetch("http://localhost:3000/api/v1/devices-control", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          device_name: "aircondition",
-          status: "0",
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          const currentAirconditionState = data.airconditionState;
-          console.log(data.airconditionState);
-
-          if (data.airconditionState === 0) {
-            airconditionImage.src = "./public/air-conditioner.png";
-            btnAirconditionOn.style.backgroundColor = "rgb(19, 125, 18)";
-            btnAirconditionOff.style.backgroundColor = "rgb(221, 62, 51)";
-            airconditionState = 0;
           }
         });
     }
@@ -233,43 +181,43 @@ function getRandomNumber(min, max) {
 }
 
 function changeTextColor(temp, humid, light) {
-  if (temp > 80) {
+  if (temp > 32) {
     informationTempBox.style.background =
-      "linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(194,0,55,1) 0%, rgba(219,1,1,1) 100%)";
-  } else if (temp > 60) {
-    informationTempBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(194,0,55,1) 25%, rgba(219,1,1,1) 100%)`;
-  } else if (temp > 40) {
-    informationTempBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(194,0,55,1) 50%, rgba(219,1,1,1) 100%)`;
-  } else if (temp > 20) {
-    informationTempBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(194,0,55,1) 75%, rgba(219,1,1,1) 100%)`;
+      "linear-gradient(135deg, #E80505 65%, #FDD819 100%)";
+  } else if (temp > 30) {
+    informationTempBox.style.background = `linear-gradient(135deg, #E80505 55%, #FDD819 100%)`;
+  } else if (temp > 28) {
+    informationTempBox.style.background = `linear-gradient(135deg, #E80505 40%, #FDD819 100%)`;
+  } else if (temp > 26) {
+    informationTempBox.style.background = `linear-gradient(135deg, #E80505 30%, #FDD819 100%)`;
   } else {
-    informationTempBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(194,0,55,1) 100%, rgba(219,1,1,1) 100%)`;
+    informationTempBox.style.background = `linear-gradient(135deg, #E80505 20%,  #FDD819 100%)`;
   }
 
   if (humid > 80) {
     informationHumidBox.style.background =
-      "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(1,85,124,1) 100%, rgba(0,212,255,1) 100%)";
+      "linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(1,85,124,1) 65%, rgba(0,212,255,1) 100%)";
   } else if (humid > 60) {
-    informationHumidBox.style.background = `linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(1,85,124,1) 75%, rgba(0,212,255,1) 100%)`;
+    informationHumidBox.style.background = `linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(1,85,124,1) 60%, rgba(0,212,255,1) 100%)`;
   } else if (humid > 40) {
-    informationHumidBox.style.background = `linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(1,85,124,1) 50%, rgba(0,212,255,1) 100%)`;
+    informationHumidBox.style.background = `linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(1,85,124,1) 55%, rgba(0,212,255,1) 100%)`;
   } else if (humid > 20) {
-    informationHumidBox.style.background = `linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(1,85,124,1) 25%, rgba(0,212,255,1) 100%)`;
+    informationHumidBox.style.background = `linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(1,85,124,1) 50%, rgba(0,212,255,1) 100%)`;
   } else {
-    informationHumidBox.style.background = `linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(1,85,124,1) 0%, rgba(0,212,255,1) 100%)`;
+    informationHumidBox.style.background = `linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(1,85,124,1) 45%, rgba(0,212,255,1) 100%)`;
   }
 
-  if (light > 80) {
+  if (light > 3000) {
     informationLightBox.style.background =
-      "linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 0%, rgba(255,254,121,1) 100%)";
-  } else if (light > 60) {
-    informationLightBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 25%, rgba(255,254,121,1) 100%)`;
-  } else if (light > 40) {
-    informationLightBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 50%, rgba(255,254,121,1) 100%)`;
-  } else if (light > 20) {
-    informationLightBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 75%, rgba(255,254,121,1) 100%)`;
+      "linear-gradient(315deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 25%, rgba(255,254,121,1) 100%)";
+  } else if (light > 2400) {
+    informationLightBox.style.background = `linear-gradient(315deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 30%, rgba(255,254,121,1) 100%)`;
+  } else if (light > 1700) {
+    informationLightBox.style.background = `linear-gradient(315deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 35%, rgba(255,254,121,1) 100%)`;
+  } else if (light > 1200) {
+    informationLightBox.style.background = `linear-gradient(315deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 40%, rgba(255,254,121,1) 100%)`;
   } else {
-    informationLightBox.style.background = `linear-gradient(-90deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 100%, rgba(255,254,121,1) 100%)`;
+    informationLightBox.style.background = `linear-gradient(315deg, rgba(2,0,36,1) 0%, rgba(190,186,89,1) 60%, rgba(255,254,121,1) 100%)`;
   }
 }
 
@@ -301,7 +249,7 @@ function updateChartWithSensorData(temperature, humidity, light, timestamp) {
 function generateRandomValue() {
   let temp = getRandomNumber(1, 100);
   let humid = getRandomNumber(1, 100);
-  let light = getRandomNumber(1, 100);
+  let light = Math.floor(Math.random() * (4000 - 1 + 1)) + 1;
 
   changeTextColor(temp, humid, light);
 

@@ -10,7 +10,7 @@ html {
 }
 
 body {
-  background-color: #fff9db;
+  background-color: #ebfbee;
 }
 
 nav {
@@ -46,7 +46,7 @@ a:hover {
 }
 
 .active {
-  background-color: #4caf50;
+  background-color: #8ce99a;
 }
 
 .header {
@@ -79,12 +79,7 @@ a:hover {
 }
 
 .informationTempBox {
-  background: linear-gradient(
-    -90deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(194, 0, 55, 1) 100%,
-    rgba(219, 1, 1, 1) 100%
-  );
+  background: linear-gradient(135deg, #e80505 65%, #fdd819 100%);
 }
 
 .informationHumidBox {
@@ -98,18 +93,9 @@ a:hover {
 
 .informationLightBox {
   background: linear-gradient(
-    -90deg,
+    315deg,
     rgba(2, 0, 36, 1) 0%,
-    rgba(190, 186, 89, 1) 100%,
-    rgba(255, 254, 121, 1) 100%
-  );
-}
-
-.informationDustBox {
-  background: linear-gradient(
-    -90deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(190, 186, 89, 1) 100%,
+    rgba(190, 186, 89, 1) 25%,
     rgba(255, 254, 121, 1) 100%
   );
 }
@@ -140,9 +126,9 @@ a:hover {
 }
 
 .controlContent {
-  margin-top: 3.2rem;
+  margin-top: 4.8rem;
   display: flex;
-  gap: 38rem;
+  gap: 30rem;
   align-items: center;
   justify-content: center;
 }
@@ -155,10 +141,9 @@ a:hover {
 }
 
 .myChart {
-  background-color: #fcc419;
-  padding: 1.2rem;
+  background-color: #8ce99a;
+  padding: 1.6rem;
   border-radius: 1.2rem;
-  margin-bottom: 2.8rem;
 }
 
 #chartInformation {
@@ -168,10 +153,14 @@ a:hover {
 }
 
 .controlBox {
-  background-color: #fcc419;
-  width: 25rem;
+  width: 37rem;
+  height: 10rem;
   text-align: center;
   border-radius: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
 }
 
 .controlPanel .img {
@@ -184,20 +173,20 @@ a:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1.4rem;
+  background-color: #8ce99a;
+  border-radius: 1.2rem;
 }
 
 .btnContainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 1.2rem;
-  padding-bottom: 2.4rem;
   gap: 1.2rem;
 }
 
 .btn {
-  padding: 1.2rem 4rem;
+  padding: 1.2rem 3.6rem;
   border: 0;
   border-radius: 5px;
   font-weight: 600;

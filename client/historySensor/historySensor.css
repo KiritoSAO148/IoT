@@ -11,7 +11,7 @@ html {
 
 body {
   font-size: 1.6rem;
-  background-color: #fff9db;
+  background-color: #ebfbee;
 }
 
 table {
@@ -28,7 +28,11 @@ td {
 }
 
 th {
-  background-color: #f2f2f2;
+  background-color: #4caf50;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #d3f9d8;
 }
 
 .pagination {
@@ -89,8 +93,13 @@ th {
 }
 
 #searchButton {
-  padding: 8px 16px;
   cursor: pointer;
+  padding: 8px 16px;
+  margin: 0 16px;
+  background-color: #4caf50;
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 4px;
 }
 
 #searchInput {
